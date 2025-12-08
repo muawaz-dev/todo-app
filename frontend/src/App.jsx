@@ -7,11 +7,13 @@ export default function App() {
   const [input, setInput] = useState("");
   const [editingId, setEditingId] = useState(null);
   const [editingText, setEditingText] = useState("");
+  const [hideCompleted, setHideCompleted] = useState(false);
+  const [filterTodos,setFilterTodos] = useState(false)
 
   useEffect(() => {
     fetch("http://localhost:3000/list")
-    .then((res)=>res.json())
-    .then((data)=>{setTodos(data)})
+      .then((res) => res.json())
+      .then((data) => { setTodos(data) })
   }, [])
 
   const addTodo = () => {
@@ -90,6 +92,15 @@ export default function App() {
       .catch((err) => { console.log(err) })
   };
 
+  const handleHideCompleted = () => {
+    setHideCompleted(!hideCompleted)
+  }
+
+
+  const filterImportant = () => {
+    setFilterTodos(!filterTodos)
+   }
+
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-purple-400 via-pink-400 to-yellow-300 flex flex-col items-center px-4 py-10">
       <motion.div
@@ -102,7 +113,7 @@ export default function App() {
         </h1>
 
         {/* Input Box */}
-        <div className="flex gap-2 mb-6">
+        <div className="flex gap-2 mb-3">
           <input
             className="flex-1 p-3 rounded-xl border border-white/50 bg-white/60 backdrop-blur-md placeholder-gray-600 text-black"
             placeholder="Add a new task..."
@@ -123,6 +134,16 @@ export default function App() {
             Delete All
           </button>
         </div>
+        <div className="mb-3 flex justify-around">
+          <div onClick={handleHideCompleted}>
+            <label className="text-white" htmlFor="completed">Hide Completed:</label>
+            <input type="checkbox" id="completed" className="mx-1 relative top-0.5" />
+          </div>
+          <div onClick={filterImportant}>
+            <label className="text-white" htmlFor="imporant">Filter important:</label>
+            <input type="checkbox" id="important" className="mx-1 relative top-0.5" />
+          </div>
+        </div>
 
         {/* Todo List */}
         <div className="flex flex-col gap-4">
@@ -135,8 +156,8 @@ export default function App() {
               key={todo.id}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className={`w-full p-4 rounded-xl shadow-lg flex items-center justify-between backdrop-blur-xl border 
-              ${todo.completed ? "bg-green-300/40 border-green-200" : "bg-white/60 border-white/50"}`}
+              className={`${filterTodos && (!todo.important && "hidden")} w-full p-4 rounded-xl shadow-lg flex items-center justify-between backdrop-blur-xl border 
+              ${todo.completed ? hideCompleted ? "hidden" : "bg-green-300/40 border-green-200" : "bg-white/60 border-white/50"}`}
             >
               {/* Left side */}
               <div className="flex items-center gap-3 flex-1">
