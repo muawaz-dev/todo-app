@@ -2,7 +2,7 @@ import express from "express";
 import { Todo } from "../db/main.js";
 import cors from "cors"
 const app = express();
-app.use(cors({ origin: "http://localhost:5173" }))
+app.use(cors())
 app.use(express.json());
 
 app.get("/list",async(req,res)=>{

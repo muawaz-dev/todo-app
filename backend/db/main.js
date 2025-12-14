@@ -1,7 +1,14 @@
+import dotenv from "dotenv"
+dotenv.config()
 import mongoose from "mongoose"
 
-await mongoose.connect("mongodb+srv://muawaz8:thegrimreaper2008@cluster0.jmuiufj.mongodb.net/Todo")
-
+await mongoose.connect(`mongodb+srv://${process.env.DB_PASSWORD}@cluster0.jmuiufj.mongodb.net/${process.env.DB_NAME}`)
+.catch((err)=>
+    {   
+        console.log(err)
+        process.exit(1)
+    }
+)
 const schema = new mongoose.Schema({
     text: {
         type: String,
